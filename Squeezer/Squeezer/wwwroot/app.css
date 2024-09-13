@@ -9,6 +9,13 @@ html, body {
     font-family: "Poppins", sans-serif;
 }
 
+a {
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
 .bg-main {
     background-color: var(--color-main);
 }
