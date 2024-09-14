@@ -6,16 +6,39 @@
     <h1 class="text-main fw-bold text-center">URL shortner - <small>Make any URL shorter</small></h1>
 </SectionContent>
 
-<h1>Hello, world!</h1>
+<div class="row">
+    <div class="col-sm-6 my-5 mx-auto shadow rounded">
+        <ShortUrlGeneratorForm @rendermode="InteractiveAuto" />
+    </div>
+</div>
 
-Welcome to your new app.
+<div class="row my-5">
+    <div class="col-12">
+        <h3 class="text-main fw-bold mb-4">Features:</h3>
+        <ul class="list-unstyled">
+            <li>
+                <p class="h3 mb-3">
+                    <span>&rarr;</span> Shorten any long URL
+                </p>
+            </li>
+            <li>
+                <p class="h3 mb-3">
+                    <span>&rarr;</span> Copy the shortened URL to clipboard
+                </p>
+            </li>
+            <li>
+                <p class="h3 mb-3">
+                    <span>&rarr;</span> Share the shortened URL
+                </p>
+            </li>
+            <li>
+                <p class="h3 mb-3">
+                    <span>&rarr;</span> Track the clicks on the shortened URL
+                </p>
+            </li>
+        </ul>
+    </div>
+</div>
 
+<span class="material-symbols-outlined">content_copy</span>
 
-    <span class="material-symbols-outlined">
-        content_copy
-    </span>
-
-<button type="button" class="btn btn-main">test colors</button>
-
-
-<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z" /></svg>

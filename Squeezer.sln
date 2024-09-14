@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Squeezer", "Squeezer\Squeezer\Squeezer.csproj", "{42574FCD-5318-42B1-AAB5-9C80485358F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Squeezer", "Squeezer\Squeezer\Squeezer.csproj", "{42574FCD-5318-42B1-AAB5-9C80485358F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Squeezer.Client", "Squeezer\Squeezer.Client\Squeezer.Client.csproj", "{DE0EC0F1-2559-414F-9E44-FE9CB37BF168}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Squeezer.Client", "Squeezer\Squeezer.Client\Squeezer.Client.csproj", "{DE0EC0F1-2559-414F-9E44-FE9CB37BF168}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

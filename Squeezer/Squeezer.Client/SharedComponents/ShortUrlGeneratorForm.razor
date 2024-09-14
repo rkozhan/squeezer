@@ -1,0 +1,40 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+<div class="">
+    <EditForm Model="_model" OnValidSubmit="ShortenUrlAsync">
+        <DataAnnotationsValidator />
+        <h2>Make a Long URL shorter</h2>
+        <p>Enter or paste a long URL</p>
+        <div class="mb-3">
+            <InputText @bind-Value="_model.LongUrl" class="form-control" placeholder="https://some-long.url/to-make/shorter"/>
+            <ValidationMessage For="@(() => _model.LongUrl)" />
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-main" disabled="@_isProcessing">
+                @(_isProcessing? "Shortening url..." : "Shorten URL")
+            </button>
+        </div>
+    </EditForm>
+</div>
+
+@if(_isProcessing)
+{
+    <Loader />
+}
+
+@code {
+    private ShortUrlGeneratorModel _model = new ();
+    private bool _isProcessing;
+
+    private async Task ShortenUrlAsync()
+    {
+        _isProcessing = true;
+        await Task.Delay(2500);
+        _isProcessing = false;
+    }
+    class ShortUrlGeneratorModel
+    {
+        [Required, Length(10, 250)]
+        public string LongUrl { get; set; }
+    }
+}
