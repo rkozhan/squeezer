@@ -1,4 +1,8 @@
 ﻿@using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
+
+@inject NavigationManager NavigationManager
+@inject ILinkService LinkService
 
 <div class="">
     <EditForm Model="_model" OnValidSubmit="ShortenUrlAsync">
@@ -23,13 +27,30 @@
 }
 
 @code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthStateTask { get; set; }
+
     private ShortUrlGeneratorModel _model = new ();
     private bool _isProcessing;
 
     private async Task ShortenUrlAsync()
     {
         _isProcessing = true;
-        await Task.Delay(2500);
+
+        var authState = await AuthStateTask;
+        if (authState.User.Identity is null || !authState.User.Identity.IsAuthenticated)
+        {
+            //is not logged in
+            NavigationManager.NavigateTo("Account/Login");
+            return;
+        }
+
+        var userId = authState.User.GetUserId();
+
+        var dto = new LinkCreateDto(_model.LongUrl, userId);
+
+        var link = await LinkService.CreateLinkAsync(dto);
+
         _isProcessing = false;
     }
     class ShortUrlGeneratorModel

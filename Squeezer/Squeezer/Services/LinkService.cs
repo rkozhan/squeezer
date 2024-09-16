@@ -3,9 +3,8 @@ using Microsoft.Extensions.Configuration;
 using Squeezer.Client.Dtos;
 using Squeezer.Data;
 
-namespace Squeezer.Services
-{
-    public class LinkService
+namespace Squeezer.Services{
+    public class LinkService : Client.Interfaces.ILinkService
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly IShortCodeGeneratorService _shortCodeGeneratorService;
@@ -29,7 +28,7 @@ namespace Squeezer.Services
             {
                 LongUrl = dto.LongUrl,
                 ShortCode = shortCode,
-                ShortUrl = domain,
+                ShortUrl = $"{domain.TrimEnd('/')}/{shortCode}",
                 UserId = dto.UserId,
                 IsActive = true,
             };

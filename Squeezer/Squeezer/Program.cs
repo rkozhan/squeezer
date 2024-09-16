@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Squeezer.Client.Pages;
+using Squeezer.Client.Interfaces;
 using Squeezer.Components;
 using Squeezer.Components.Account;
 using Squeezer.Data;
+using Squeezer.Endpoints;
 using Squeezer.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +40,8 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 builder.Services.AddTransient<IShortCodeGeneratorService, ShortCodeGeneratorService>();
+builder.Services.AddTransient<ILinkService, LinkService>();
+
 
 var app = builder.Build();
 
@@ -67,5 +70,7 @@ app.MapRazorComponents<App>()
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
+
+app.MapLinkEndpoints();
 
 app.Run();
