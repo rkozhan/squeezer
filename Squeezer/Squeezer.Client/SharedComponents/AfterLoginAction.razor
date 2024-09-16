@@ -1,0 +1,42 @@
+﻿@using Squeezer.Client.Services
+@rendermode @(new InteractiveAutoRenderMode(prerender: false))
+
+@inject SessionStorageService StorageService
+@inject ILinkService LinkService
+
+@if (_isProcessing)
+{
+    <Loader />
+}
+
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthStateTask { get; set; }
+
+    private bool _isProcessing;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var longUrl = await StorageService.GetAsync(SessionStorageService.LongUrlKey);
+            if (!string.IsNullOrWhiteSpace(longUrl))
+            {
+                //there is a saved longUrl in a sessionStorage
+                //generate short url
+                _isProcessing = true;
+
+                var authState = await AuthStateTask;
+
+                var userId = authState.User.GetUserId();
+
+                var dto = new LinkCreateDto(longUrl, userId);
+
+                var link = await LinkService.CreateLinkAsync(dto);
+
+                _isProcessing = false;
+            }
+            await StorageService.RemoveAsync(SessionStorageService.LongUrlKey);
+        }
+    }
+}
