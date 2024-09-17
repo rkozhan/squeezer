@@ -25,6 +25,7 @@
                 //there is a saved longUrl in a sessionStorage
                 //generate short url
                 _isProcessing = true;
+                StateHasChanged();
 
                 var authState = await AuthStateTask;
 
@@ -35,6 +36,7 @@
                 var link = await LinkService.CreateLinkAsync(dto);
 
                 _isProcessing = false;
+                StateHasChanged();
             }
             await StorageService.RemoveAsync(SessionStorageService.LongUrlKey);
         }

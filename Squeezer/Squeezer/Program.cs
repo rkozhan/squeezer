@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Squeezer.Client.Interfaces;
+using Squeezer.Client.Services;
 using Squeezer.Components;
 using Squeezer.Components.Account;
 using Squeezer.Data;
@@ -40,7 +41,8 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 builder.Services.AddTransient<IShortCodeGeneratorService, ShortCodeGeneratorService>();
-builder.Services.AddTransient<ILinkService, LinkService>();
+builder.Services.AddTransient<ILinkService, LinkService>()
+    .AddScoped<SessionStorageService>();
 
 
 var app = builder.Build();
