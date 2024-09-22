@@ -1,0 +1,38 @@
+﻿@inject IJSRuntime JsRuntime
+
+<Modal Title="Short URL Generated" OnClose="OnClose">
+    <ChildContent>
+        <div class="">
+            <p>Your short URL has been generated successfully.</p>
+            <div class="mb-3">
+                <input type="text" class="form-control" readonly value="@ShortUrl" />
+            </div>
+        </div>
+    </ChildContent>
+    <FooterContent>
+        <div class="d-flex justify-content-between align-items-center w-100">
+            <button type="button" class="btn btn-secondary" @onclick="OnClose">Close</button>
+            <button type="button" class="btn btn-main" @onclick="CopyAsync">@_copyBtnText</button>
+        </div>
+    </FooterContent>
+</Modal>
+
+@code {
+    [Parameter, EditorRequired]
+    public string ShortUrl { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback OnClose { get; set; }
+
+    private string _copyBtnText = "Copy";
+    private async Task CopyAsync()
+    {
+        //call js to copy to clipboard
+        await JsRuntime.InvokeVoidAsync("window.copyToClipboard", ShortUrl);
+        _copyBtnText = "Copied";
+        StateHasChanged();
+        await Task.Delay(2000);
+
+        _copyBtnText = "Copy";
+    }
+}
