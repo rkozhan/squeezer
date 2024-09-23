@@ -35,6 +35,7 @@ namespace Squeezer.Services{
 
             await using var context = _contextFactory.CreateDbContext();
             await context.Links.AddAsync(link);
+            await context.SaveChangesAsync();
 
             return new LinkDto
             {
@@ -43,6 +44,31 @@ namespace Squeezer.Services{
                 IsActive = link.IsActive,
                 ShortUrl = link.ShortUrl,
             };
+        }
+
+        public async Task<PagedResult<LinkDto>> GetLinksByUserAsync(string userId, int startIndex, int pageSize, bool activeOnly)
+        {
+            await using var context = _contextFactory.CreateDbContext();
+
+            var query = context.Links.Where(l => l.UserId == userId);
+            if (activeOnly)
+            {
+                query = query.Where(l => l.IsActive);
+            }
+
+            var totalCount = await query.CountAsync();
+            var links = await query.Skip(startIndex)
+                .Take(pageSize)
+                .Select(l => new LinkDto
+                {
+                    Id=l.Id,
+                    LongUrl = l.LongUrl,
+                    IsActive=l.IsActive,
+                    ShortUrl = l.ShortUrl
+                })
+                .ToArrayAsync();
+
+            return new PagedResult<LinkDto>(links, totalCount);
         }
     }
 }

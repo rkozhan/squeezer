@@ -1,0 +1,32 @@
+﻿@page "/app/my-links";
+@using Squeezer.Client.Layout
+
+@rendermode @(new InteractiveAutoRenderMode(prerender: false))
+
+@layout InteractiveMainLayout
+
+@inject NavigationManager NavigationManager
+@inject ILinkService LinkService
+
+<PageTitle>My Links | Squeezer</PageTitle>
+
+<SectionContent SectionName="client-heading">
+    <h1 class="text-main fw-bold text-center">My Links</h1>
+</SectionContent>
+
+<div class="row">
+    <ul>
+        @foreach (var link in _links)
+        {
+            <li>@link.ShortUrl - @link.LongUrl</li>
+        }
+    </ul>
+</div>
+
+@code {
+    private LinkDto[] _links = [];
+    protected override async Task OnInitializedAsync()
+    {
+        (_links, var count) = await LinkService.GetLinksByUserAsync("", 0, 10, false);
+    }
+}
