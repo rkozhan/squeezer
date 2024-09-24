@@ -64,7 +64,8 @@ namespace Squeezer.Services{
                     Id=l.Id,
                     LongUrl = l.LongUrl,
                     IsActive=l.IsActive,
-                    ShortUrl = l.ShortUrl
+                    ShortUrl = l.ShortUrl,
+                    TotalClicks = l.linkAnalytics.Count,
                 })
                 .ToArrayAsync();
 
