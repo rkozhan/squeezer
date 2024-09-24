@@ -12,7 +12,7 @@
         <h2>Make a Long URL shorter</h2>
         <p>Enter or paste a long URL</p>
         <div class="mb-3">
-            <InputText @bind-Value="_model.LongUrl" class="form-control" placeholder="https://some-long.url/to-make/shorter"/>
+            <InputText @bind-Value="_model.LongUrl" class="form-control" placeholder="Your URL to short"/>
             <ValidationMessage For="@(() => _model.LongUrl)" />
         </div>
         <div class="mb-3">
