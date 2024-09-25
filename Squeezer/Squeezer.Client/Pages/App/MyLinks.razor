@@ -26,7 +26,13 @@
             Show @(_showActiveOnly ? "All" : "Active") Links
         </button>
     </div>
+    <hr />
 </div>
+
+@if (_showToast)
+{
+    <Toast Text="Link Copied!" OnClose="()=> _showToast=false" TimeoutInMiliseconds="750" />
+}
 
 @if (_isLoading)
 {
@@ -117,6 +123,8 @@ else
 
     private bool _isLoading = false;
 
+    private bool _showToast;
+
     //[SupplyParameterFromQuery(Name = "show")]
     //private string? Show { get; set; } = ShowType.ActiveOnly.ToString();
     //private bool ShowActiveOnly =>
@@ -168,6 +176,7 @@ else
     private async Task CopyLinkAsync(string linkUrl)
     {
         await JsRuntime.InvokeVoidAsync("window.copyToClipboard", linkUrl);
+        _showToast = true;
     }
 
     enum ShowType

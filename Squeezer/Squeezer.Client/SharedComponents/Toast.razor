@@ -1,0 +1,25 @@
+﻿<div class="fullscreen bg-secondary overlay" style="z-index: 2000; opacity:.5"></div>
+
+<div class="fullscreen d-flex justify-content-center align-items-center" style="z-index: 2001">
+    <div class="bg-white p-4 shadow rounded">
+        @Text
+    </div>
+</div>
+
+
+@code {
+    [Parameter, EditorRequired]
+    public string Text { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback OnClose { get; set; }
+
+    [Parameter]
+    public int TimeoutInMiliseconds { get; set; } = 1000;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(TimeoutInMiliseconds);
+        await OnClose.InvokeAsync();
+    }
+}
