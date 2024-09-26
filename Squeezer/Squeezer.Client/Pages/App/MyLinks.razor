@@ -19,10 +19,7 @@
 <div class="row mt-3">
     <div class="col-12 d-flex justify-content-between align-items-center">
         <h3>@(_showActiveOnly ? "Active" : "All") Links</h3>
-        @*<h3>@(ShowActiveOnly ? "Active" : "All") Links</h3>
-        <a href="@ShowButtonLinkUrl" class="btn-btn-sm btn-outline-primary">Show @(ShowActiveOnly ? "All" : "Active") Links</a>*@
         <button type="button" class="btn btn-sm btn-outline-primary" @onclick="ToggleActiveOnly">
-            @*Show @(ShowActiveOnly ? "All" : "Active") Links*@
             Show @(_showActiveOnly ? "All" : "Active") Links
         </button>
     </div>
@@ -90,7 +87,7 @@ else
                             </a>
                         </div>
                         <div class="col-sm-3 d-flex flex-column justify-content-center align-items-center gap-2">
-                            <button type="button" class="btn btn-outline-primary d-flex" title="Edit Url">
+                            <button type="button" class="btn btn-outline-primary d-flex" title="Edit Url" @onclick="()=> _editLink = context">
                                 <i class="material-symbols-outlined me-1">edit</i>
                                 <span>Edit</span>
                             </button>
@@ -115,6 +112,14 @@ else
     </div>
 }
 
+@if(_editLink is not null)
+{
+    <EditLinkModal Link="_editLink"
+        UserId="@_userId"
+        OnClose="()=> _editLink = null"
+        OnSave="OnLinkSaved" />
+}
+
 @code {
     private const int PageSize = 5;
 
@@ -125,14 +130,6 @@ else
 
     private bool _showToast;
 
-    //[SupplyParameterFromQuery(Name = "show")]
-    //private string? Show { get; set; } = ShowType.ActiveOnly.ToString();
-    //private bool ShowActiveOnly =>
-    //    string.IsNullOrWhiteSpace(Show) || Show == ShowType.ActiveOnly.ToString();
-
-    //private string ShowButtonLinkUrl => ShowActiveOnly ? $"app/my-links?show={ShowType.All}"
-    //    : $"app/my-links?show={ShowType.ActiveOnly}";
-
     private bool _showActiveOnly = true;
 
     private GridItemsProvider<LinkDto>? _linksProvider;
@@ -141,28 +138,22 @@ else
 
     private PaginationState _paginationState = new() { ItemsPerPage = PageSize };
 
+    private LinkDto? _editLink = null;
+
+    private string _userId;
+
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthStateTask;
-        var userId = authState.User.GetUserId();
+        _userId = authState.User.GetUserId();
+
         _linksProvider = async request =>
         {
             var (links, count) = await LinkService.GetLinksByUserAsync(
-                //"", request.StartIndex, request.Count ?? PageSize, ShowActiveOnly);
-                userId, request.StartIndex, request.Count ?? PageSize, _showActiveOnly);
-
+                _userId, request.StartIndex, request.Count ?? PageSize, _showActiveOnly);
             return GridItemsProviderResult.From(links, count);
         };
     }
-    @*protected override async Task OnParametersSetAsync()
-    {
-        _isLoading = true;
-        if (_grid is not null)
-        {
-            await _grid.RefreshDataAsync();
-        }
-        _isLoading = false;
-    }*@
 
     private async Task ToggleActiveOnly()
     {
@@ -177,6 +168,26 @@ else
     {
         await JsRuntime.InvokeVoidAsync("window.copyToClipboard", linkUrl);
         _showToast = true;
+    }
+
+    private async void OnLinkSaved(LinkDto updatedLink)
+    {
+        _editLink!.LongUrl = updatedLink.LongUrl;
+
+        bool _refreshGrid = false;
+
+        if (_editLink.IsActive && !updatedLink.IsActive) //an active link got inactive
+        {
+            if (_showActiveOnly) _refreshGrid = true;                
+        }
+        _editLink!.IsActive = updatedLink.IsActive;
+        _editLink = null;
+
+        if (_refreshGrid)
+        {
+            await Task.Delay(1000);
+            await _grid!.RefreshDataAsync();
+        }
     }
 
     enum ShowType

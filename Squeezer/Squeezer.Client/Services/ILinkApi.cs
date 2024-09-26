@@ -8,5 +8,8 @@ public interface ILinkApi
 
     [Get("/api/links")]
     Task<PagedResult<LinkDto>> GetLinksByUserAsync(int startIndex, int pageSize, bool activeOnly);
+
+    [Patch("/api/links/{linkId}")]
+    Task<LinkDto?> UpdateLinkAsync(long linkId, LinkEditDto dto);
 }
 
