@@ -1,4 +1,5 @@
-﻿using Squeezer.Client.Dtos;
+﻿using Humanizer;
+using Squeezer.Client.Dtos;
 using Squeezer.Client.Extensions;
 using Squeezer.Client.Interfaces;
 using Squeezer.Services;
@@ -45,6 +46,13 @@ public static class LinkEndpoints
                 Results.NotFound(linkId);
 
             return Results.Ok(link);
+        });
+
+        linksGroup.MapDelete("/{linkId:long}", async (long linkId, ILinkService linkService, ClaimsPrincipal principal) =>
+        {
+            var userId = principal.GetUserId();
+            await linkService.DeleteLinkAsync(linkId, userId);
+            return Results.NoContent();
         });
 
         return app;

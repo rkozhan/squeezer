@@ -9,5 +9,7 @@ namespace Squeezer.Client.Interfaces
         Task<PagedResult<LinkDto>> GetLinksByUserAsync(string userId, int startIndex, int pageSize, bool activeOnly);
 
         Task<LinkDto?> UpdateLinkAsync(LinkEditDto dto);
+
+        Task DeleteLinkAsync(long id, string userId);
     }
 }

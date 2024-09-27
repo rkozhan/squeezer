@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Humanizer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Squeezer.Client.Dtos;
 using Squeezer.Data;
@@ -93,5 +94,21 @@ public class LinkService : Client.Interfaces.ILinkService
             IsActive = dto.isActive,
             ShortUrl = dbLink.ShortUrl,
         };
+    }
+
+    public async Task DeleteLinkAsync(long id, string userId)
+    {
+        await using var context = _contextFactory.CreateDbContext();
+
+        var link = await context.Links
+            .Include(l => l.linkAnalytics)
+            .FirstOrDefaultAsync(l => l.Id == id && l.UserId == userId);
+
+        if (link == null) return;
+
+        if(link.linkAnalytics.Count > 0) context.LinkAnalytics.RemoveRange(link.linkAnalytics);
+        context.Links.Remove(link);
+
+        await context.SaveChangesAsync();
     }
 }
