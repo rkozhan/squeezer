@@ -41,6 +41,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 builder.Services.AddTransient<IShortCodeGeneratorService, ShortCodeGeneratorService>();
+builder.Services.AddTransient<IRedirectService, RedirectService>();
 builder.Services.AddTransient<ILinkService, LinkService>()
     .AddScoped<SessionStorageService>();
 

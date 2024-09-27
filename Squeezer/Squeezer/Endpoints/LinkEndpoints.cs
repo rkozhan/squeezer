@@ -55,6 +55,17 @@ public static class LinkEndpoints
             return Results.NoContent();
         });
 
+        app.MapGet("/r/{shortCode}", async (string shortCode, IRedirectService redirectService) =>
+        {
+            var longUrl = await redirectService.GetLongUrlByShortCodeAsync(shortCode);
+            if (longUrl is null)
+            {
+                return Results.NotFound("Short link not found");
+            }
+
+            return Results.Redirect(longUrl);
+        });
+
         return app;
     }
 }

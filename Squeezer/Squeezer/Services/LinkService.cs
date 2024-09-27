@@ -30,7 +30,7 @@ public class LinkService : Client.Interfaces.ILinkService
         {
             LongUrl = dto.LongUrl,
             ShortCode = shortCode,
-            ShortUrl = $"{domain.TrimEnd('/')}/{shortCode}",
+            ShortUrl = $"{domain.TrimEnd('/')}/r/{shortCode}",
             UserId = dto.UserId,
             IsActive = true,
         };
