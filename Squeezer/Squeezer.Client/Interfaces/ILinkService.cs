@@ -11,5 +11,7 @@ namespace Squeezer.Client.Interfaces
         Task<LinkDto?> UpdateLinkAsync(LinkEditDto dto);
 
         Task DeleteLinkAsync(long id, string userId);
+
+        Task<LinkDetailsDto?> GetLinkAsync(long id, string userId);
     }
 }

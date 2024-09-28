@@ -59,7 +59,8 @@ public class LinkService : Client.Interfaces.ILinkService
         }
 
         var totalCount = await query.CountAsync();
-        var links = await query.Skip(startIndex)
+        var links = await query.OrderByDescending(l => l.Id)
+            .Skip(startIndex)
             .Take(pageSize)
             .Select(l => new LinkDto
             {
@@ -110,5 +111,35 @@ public class LinkService : Client.Interfaces.ILinkService
         context.Links.Remove(link);
 
         await context.SaveChangesAsync();
+    }
+
+    public async Task<LinkDetailsDto?> GetLinkAsync(long id, string userId)
+    {
+        await using var context = _contextFactory.CreateDbContext();
+
+        var link = await context.Links
+            .Include(l => l.linkAnalytics)
+            .FirstOrDefaultAsync(l => l.Id == id && l.UserId == userId);
+
+        if (link == null) return null;
+
+        LinkAnaliticDto[] linkAnalytics = link.linkAnalytics ?
+            .Select(a => new LinkAnaliticDto
+        {
+            Id = a.Id,
+            ClickedAt = a.ClicedAt,
+            LinkId = a.LinkId
+        }).ToArray()
+        ?? [];
+
+        var linkDto = new LinkDto
+        {
+            Id = id,
+            IsActive = link.IsActive,
+            LongUrl = link.LongUrl,
+            ShortUrl = link.ShortUrl,
+            TotalClicks = linkAnalytics.Length
+        };
+        return new LinkDetailsDto(linkDto, linkAnalytics);
     }
 }

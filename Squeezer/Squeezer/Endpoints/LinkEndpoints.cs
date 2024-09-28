@@ -1,4 +1,5 @@
 ﻿using Humanizer;
+using Microsoft.AspNetCore.Builder;
 using Squeezer.Client.Dtos;
 using Squeezer.Client.Extensions;
 using Squeezer.Client.Interfaces;
@@ -53,6 +54,13 @@ public static class LinkEndpoints
             var userId = principal.GetUserId();
             await linkService.DeleteLinkAsync(linkId, userId);
             return Results.NoContent();
+        });
+
+        linksGroup.MapGet("/{linkId:long}", async (long linkId, ILinkService linkService, ClaimsPrincipal principal) =>
+        {
+            var userId = principal.GetUserId();
+            var linkDetailsDto = await linkService.GetLinkAsync(linkId, userId!);
+            return Results.Ok(linkDetailsDto);
         });
 
         app.MapGet("/r/{shortCode}", async (string shortCode, IRedirectService redirectService) =>

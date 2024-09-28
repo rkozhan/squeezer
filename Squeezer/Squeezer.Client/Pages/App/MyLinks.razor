@@ -1,10 +1,9 @@
 ﻿@page "/app/my-links";
-@using Squeezer.Client.Layout
 @using Microsoft.AspNetCore.Components.QuickGrid
 
 @rendermode @(new InteractiveAutoRenderMode(prerender: false))
 
-@layout InteractiveMainLayout
+
 
 @inject NavigationManager NavigationManager
 @inject ILinkService LinkService
