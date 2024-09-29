@@ -1,4 +1,5 @@
 ﻿@page "/app/my-links/{linkId:long}"
+@using Syncfusion.Blazor.Charts
 
 @rendermode @(new InteractiveAutoRenderMode(prerender: false))
 
@@ -42,7 +43,26 @@ else
      </div>
 
      <h4 class="fw-bold text-main">Analytics</h4>
-     <span>Chart</span>
+
+
+     <SfChart Title="Link Clicks">
+        <ChartPrimaryXAxis ValueType="Syncfusion.Blazor.Charts.ValueType.Category"></ChartPrimaryXAxis>
+        <ChartPrimaryYAxis LabelFormat="{value} Clicks"></ChartPrimaryYAxis>
+        <ChartTooltipSettings Enable="true"></ChartTooltipSettings>
+
+        <ChartSeriesCollection>
+            <ChartSeries DataSource="@_linkClicks"
+                XName="@(nameof(LinkClickData.ClickedOnStr))"
+                YName="@(nameof(LinkClickData.Clicks))"
+                Type="ChartSeriesType.Line"
+                Fill="firebrick"
+                Width="3">
+                <ChartMarker>
+                    <ChartDataLabel Visible="true" />
+                </ChartMarker>
+            </ChartSeries>
+        </ChartSeriesCollection>
+    </SfChart>
 }
 
 @code {
@@ -55,6 +75,8 @@ else
     private LinkDetailsDto? _linkDetailsDto;
 
     private bool _isLoading;
+
+    private LinkClickData[] _linkClicks = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -75,6 +97,17 @@ else
             return;
         }
 
+        _linkClicks = _linkDetailsDto.LinkAnalytics
+            .GroupBy(a => a.ClickedAt.Date)
+            .Select(g => new LinkClickData(g.Key, g.Count()))
+            .ToArray();
+
+
         _isLoading = false;
+    }
+        
+    record LinkClickData(DateTime ClickedOn, int Clicks)
+    {
+        public string ClickedOnStr => ClickedOn.ToString("dd/MM/yyyy");
     }
 }

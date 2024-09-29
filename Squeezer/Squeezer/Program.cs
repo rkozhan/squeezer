@@ -8,6 +8,7 @@ using Squeezer.Components.Account;
 using Squeezer.Data;
 using Squeezer.Endpoints;
 using Squeezer.Services;
+using Syncfusion.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +46,7 @@ builder.Services.AddTransient<IRedirectService, RedirectService>();
 builder.Services.AddTransient<ILinkService, LinkService>()
     .AddScoped<SessionStorageService>();
 
+builder.Services.AddSyncfusionBlazor();
 
 var app = builder.Build();
 

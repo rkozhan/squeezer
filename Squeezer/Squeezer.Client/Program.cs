@@ -4,6 +4,7 @@ using Refit;
 using Squeezer.Client;
 using Squeezer.Client.Interfaces;
 using Squeezer.Client.Services;
+using Syncfusion.Blazor;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -21,5 +22,7 @@ builder.Services.AddRefitClient<ILinkApi>()
     });
 
 builder.Services.AddScoped<SessionStorageService>();
+
+builder.Services.AddSyncfusionBlazor();
 
 await builder.Build().RunAsync();
