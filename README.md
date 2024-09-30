@@ -25,16 +25,18 @@ This project is still in the early stages of development. Expect frequent update
 ## Deployment Information
 The live version of this app is deployed using Render.com, the application might enter a sleep mode when not in use, which results in longer load times for the first request.
 
-## Features (Under Development)
-- Shorten long URLs
-- Save shortened URLs
-- User authentication (Login/Registration)
-- ...
-- ...
-- ...
-- ...
-- More features coming soon!
+## Database
+This project uses PostgreSQL as the primary database system.
 
+## Features (Under Development)
+- User authentication (Login and Registration)
+- URL shortening for long links
+- Save and manage shortened URLs
+- Track clicks on your shortened URLs
+- View analytics and charts for URL performance
+- Toggle the active/inactive status of your URLs
+- ...
+- Additional features coming soon!
 ---
 
 Stay tuned for more updates and improvements!

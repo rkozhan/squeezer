@@ -7,7 +7,7 @@ namespace Squeezer.Data
         [Key]
         public long Id { get; set; }
         public long LinkId { get; set; }
-        public DateTime ClicedAt { get; set; }
+        public DateTime ClicedAt { get; set; } //todo rename
 
         public virtual Link OriginalLink { get; set; }
 

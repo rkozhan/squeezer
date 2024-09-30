@@ -63,6 +63,13 @@ public static class LinkEndpoints
             return Results.Ok(linkDetailsDto);
         });
 
+        linksGroup.MapGet("/dashboard", async (ILinkService linkService, ClaimsPrincipal principal) =>
+        {
+            var userId = principal.GetUserId();
+            var dashboardData = await linkService.GetDashboardDataAsync(userId!);
+            return Results.Ok(dashboardData);
+        });
+
         app.MapGet("/r/{shortCode}", async (string shortCode, IRedirectService redirectService) =>
         {
             var longUrl = await redirectService.GetLongUrlByShortCodeAsync(shortCode);

@@ -1,0 +1,77 @@
+﻿@page "/app/dashboard"
+@rendermode @(new InteractiveAutoRenderMode(prerender: false))
+
+@inject NavigationManager NavigationManager
+@inject ILinkService LinkService
+
+<PageTitle>Dashboard | Squeezer</PageTitle>
+
+<SectionContent SectionName="client-heading">
+    <h1 class="text-main fw-bold text-center">Dashboard</h1>
+</SectionContent>
+
+@if(_isLoading) {
+    <Loader />
+}
+else
+{
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="box bg-main text-white shadow-lg cursor-pointer" @onclick="GoToMyLinksPage">
+                <h3>Total Links</h3>
+                <h2>@_dashboardData.TotalLinks</h2>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="box bg-main text-white shadow-lg cursor-pointer" @onclick="GoToMyLinksPage">
+                <h3>Active Links</h3>
+                <h2>@_dashboardData.TotalActiveLinks</h2>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="box bg-main text-white shadow-lg">
+                <h3>Inactive Links</h3>
+                <h2>@_dashboardData.TotalInactiveLinks</h2>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="box bg-main text-white shadow-lg">
+                <h3>Total Clicks</h3>
+                <h2>@_dashboardData.TotalClicks</h2>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="box bg-main text-white shadow-lg">
+                <h3>Clicks Today</h3>
+                <h2>@_dashboardData.TotalClicksToday</h2>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="box bg-main text-white shadow-lg">
+                <h3>Clicks / Link</h3>
+                <h2>@_dashboardData.AverageClicksPerLink</h2>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthStateTask { get; set; }
+
+    private DashboardDataDto _dashboardData;
+    private bool _isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isLoading = true;
+
+        var authState = await AuthStateTask;
+        var userId = authState.User.GetUserId();
+
+        _dashboardData = await LinkService.GetDashboardDataAsync(userId);
+        _isLoading = false;
+    }
+
+    private void GoToMyLinksPage() => NavigationManager.NavigateTo("/app/my-links");
+}

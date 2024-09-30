@@ -142,4 +142,55 @@ public class LinkService : Client.Interfaces.ILinkService
         };
         return new LinkDetailsDto(linkDto, linkAnalytics);
     }
+
+    public async Task<DashboardDataDto> GetDashboardDataAsync(string userId)
+    {
+        //await using var context = _contextFactory.CreateDbContext();
+        //var totalLinks = await context.Links.CountAsync(l => l.UserId == userId);
+        //var totalActiveLinks = await context.Links.CountAsync(l => l.UserId == userId && l.IsActive);
+        //var totalClicks = await context.LinkAnalytics.CountAsync(a => a.OriginalLink.UserId == userId);
+        //var totalClicksToday = await context.LinkAnalytics.CountAsync(a => a.OriginalLink.UserId == userId && a.ClicedAt.Date == DateTime.Today);
+
+        var counts = await Task.WhenAll(
+            GetTotalLinks(userId),
+            GetTotalClicks(userId),
+            GetTotalActiveLinks(userId),
+            GetTotalClicksToday(userId)
+        );
+
+        var totalLinks = counts[0];
+        var totalClicks = counts[1];
+        var totalActiveLinks = counts[2];
+        var totalClicksToday = counts[3];
+
+        var totalInactiveLinks = totalLinks - totalActiveLinks;
+        double averageClicksPerLink = totalLinks > 0 ? (double)totalClicks / totalLinks : 0;
+
+        return new DashboardDataDto(totalLinks, totalClicks, totalActiveLinks, totalInactiveLinks, averageClicksPerLink, totalClicksToday);
+    }
+
+    private async Task<int> GetTotalLinks(string userId)
+    {
+        await using var context = _contextFactory.CreateDbContext();
+        return await context.Links.CountAsync(l => l.UserId == userId);
+    }
+
+    private async Task<int> GetTotalClicks(string userId)
+    {
+        await using var context = _contextFactory.CreateDbContext();
+        return await context.LinkAnalytics.CountAsync(a => a.OriginalLink.UserId == userId);
+    }
+
+    private async Task<int> GetTotalActiveLinks(string userId)
+    {
+        await using var context = _contextFactory.CreateDbContext();
+        return await context.Links.CountAsync(l => l.UserId == userId && l.IsActive);
+    }
+
+    private async Task<int> GetTotalClicksToday(string userId)
+    {
+        await using var context = _contextFactory.CreateDbContext();
+        var today = DateTime.UtcNow.Date;
+        return await context.LinkAnalytics.CountAsync(a => a.OriginalLink.UserId == userId && a.ClicedAt.Date == today);
+    }
 }

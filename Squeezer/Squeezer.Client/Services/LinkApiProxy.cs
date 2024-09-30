@@ -24,6 +24,9 @@ public class LinkApiProxy : ILinkService
 
     public Task<LinkDetailsDto?> GetLinkAsync(long id, string userId) =>
         _linkApi.GetLinkAsync(id);
-    
+
+    public Task<DashboardDataDto> GetDashboardDataAsync(string userId) =>
+        _linkApi.GetDashboardDataAsync();
+
 
 }

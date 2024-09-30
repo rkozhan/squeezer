@@ -1,0 +1,24 @@
+﻿.box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+    border-radius: 10px;
+    margin: 10px 0;
+    
+    h2 {
+        transition: transform ease .2s;
+    }
+    
+    &:hover h2 {
+        transform: scale(1.2);
+    }
+
+    &.cursor-pointer {
+        cursor: pointer;
+    }
+}
+
+
