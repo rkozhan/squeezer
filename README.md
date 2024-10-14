@@ -7,7 +7,7 @@ You can view the live version of the application hosted on Render.com [here](htt
 
 ### Test Credentials
 login:
-name@test.com
+johndoe@test.com
 password:
 Abc123$
 

@@ -23,6 +23,8 @@ public class RedirectService : IRedirectService
         var link = context.Links.FirstOrDefault(l => l.ShortCode == shortCode);
         if (link == null) return null;
 
+        if (!link.IsActive) return null;
+
         var linkAnalytic = new LinkAnalytic
         {
             LinkId = link.Id,
